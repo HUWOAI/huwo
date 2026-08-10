@@ -10,7 +10,7 @@ AI 饮食规划 Agent 核心 Skill、菜谱生成与营养分析脚本、小虎�
 
 托管于 Gitee/GitHub 公开仓库（本 `open/` 目录），采用 **MIT** 开源许可证。开发者可基于开源模块快速复现 AI 饮食规划 Demo 效果。
 
-公开仓库路径建议：`https://github.com/<org>/huwo-ai-open` 或 Gitee 同等地址。
+公开仓库：**https://github.com/HUWOAI/huwo**（MIT，GOAI 内核开源 Demo）
 
 **2、闭源部分**
 

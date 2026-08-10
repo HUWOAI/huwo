@@ -1,10 +1,15 @@
 # 吃什么呼我 · HUWO AI — GOAI 开源 Demo
 
-> **《吃什么，呼我》** 参赛项目内核开源模块（MIT）  
-> 大赛官网：[GOAI 杭州人工智能创新大赛](https://goaihz.com/#intro)  
-> 参赛团队：杭州汇融 / 衢州呼我网络
+[![GitHub](https://img.shields.io/badge/GitHub-HUWOAI%2Fhuwo-181717?logo=github)](https://github.com/HUWOAI/huwo)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-本目录 **`open/`** 可**单独上传**至 GitHub / Gitee 作为公开仓库，与闭源商业版 APP 后端分离。
+> **《吃什么，呼我》** 参赛项目内核开源模块（MIT）  
+> 公开仓库：**https://github.com/HUWOAI/huwo**  
+> 大赛官网：[GOAI 杭州人工智能创新大赛](https://goaihz.com/#intro)  
+> 参赛团队：杭州汇融 / 衢州呼我网络  
+> 联系：`chipcliffu@gmail.com`
+
+本目录为 **HUWOAI/huwo** 开源首批代码，与闭源商业版 APP 后端（huwo.xyz）分离。
 
 ---
 
@@ -135,4 +140,6 @@ MIT License — 见 [LICENSE](./LICENSE)。
 ## 联系
 
 - 产品：https://www.huwo.xyz  
-- 开源问题：请在公开仓库提 Issue  
+- 开源仓库：https://github.com/HUWOAI/huwo  
+- Issue / PR：请在 GitHub 公开仓库提交  
+- 邮箱：chipcliffu@gmail.com  
