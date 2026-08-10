@@ -5,7 +5,7 @@
 
 > **《吃什么，呼我》** 垂直饮食 Agent 内核开源模块（MIT）  
 > 公开仓库：**https://github.com/HUWOAI/huwo**  
-> 团队：**HUWO呼我 - 杭州汇融科技&衢州呼我网络**  
+> 团队：**杭州汇融科技 | 呼我HUWO.xyz**  
 > 负责人：Richard.Mao · 官网：www.huwo.xyz · 小程序/抖音：**呼我**
 
 本目录为 **HUWOAI/huwo** 开源首批代码，与闭源商业版 APP 后端（huwo.xyz）分离。
