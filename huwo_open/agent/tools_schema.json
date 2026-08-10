@@ -1,0 +1,92 @@
+[
+  {
+    "type": "function",
+    "function": {
+      "name": "search_dish",
+      "description": "按关键词搜索示例菜品库",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyword": { "type": "string", "description": "菜名或食材关键词" },
+          "limit": { "type": "integer", "default": 5 }
+        },
+        "required": ["keyword"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "generate_meal_plan",
+      "description": "根据用户偏好生成一日饮食计划",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "date_label": { "type": "string", "description": "如今天、明天" },
+          "goal": { "type": "string", "enum": ["均衡", "减脂", "增肌", "控糖"] }
+        },
+        "required": ["date_label"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "search_nearby",
+      "description": "搜索附近餐厅、菜场或配送点（示例 POI）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "city": { "type": "string" },
+          "poi_type": { "type": "string", "enum": ["restaurant", "market", "delivery"] },
+          "keyword": { "type": "string" }
+        },
+        "required": ["poi_type"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_shopping_list",
+      "description": "根据三餐计划生成买菜购物清单",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "date_label": { "type": "string" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "analyze_meal_text",
+      "description": "根据文字描述估算一餐营养（识餐日志）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "meal_type": { "type": "string", "enum": ["早餐", "午餐", "晚餐", "加餐"] },
+          "content": { "type": "string", "description": "吃了什么" }
+        },
+        "required": ["meal_type", "content"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "robot_notify",
+      "description": "向小虎桌面机器人发送展示指令（Demo 协议）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "expression": { "type": "string", "description": "happy|think|sad|surprise" },
+          "tts_text": { "type": "string", "description": "机器人要说的短句" },
+          "screen_title": { "type": "string" }
+        },
+        "required": ["expression", "tts_text"]
+      }
+    }
+  }
+]

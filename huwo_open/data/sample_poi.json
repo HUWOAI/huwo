@@ -1,0 +1,9 @@
+[
+  {"name": "衢州味道小馆", "city": "衢州", "poi_type": "restaurant", "address": "衢州市区美食街1号", "rating": 4.6, "tags": "本地菜,鸭头", "distance_km": 0.8},
+  {"name": "衢州轻食实验室", "city": "衢州", "poi_type": "restaurant", "address": "衢州商务区88号", "rating": 4.5, "tags": "轻食,减脂", "distance_km": 1.2},
+  {"name": "盒马鲜生·衢州店", "city": "衢州", "poi_type": "market", "address": "衢州大道200号", "rating": 4.7, "tags": "生鲜,配送", "distance_km": 2.0},
+  {"name": "衢州便民菜场", "city": "衢州", "poi_type": "market", "address": "社区路18号", "rating": 4.3, "tags": "蔬菜,平价", "distance_km": 0.5},
+  {"name": "美团优选·衢州站", "city": "衢州", "poi_type": "delivery", "address": "配送中心", "rating": 4.4, "tags": "次日达", "distance_km": 3.0},
+  {"name": "杭州味道小馆", "city": "杭州", "poi_type": "restaurant", "address": "杭州市区美食街1号", "rating": 4.6, "tags": "杭帮,本地", "distance_km": 1.0},
+  {"name": "杭州轻食实验室", "city": "杭州", "poi_type": "restaurant", "address": "杭州商务区88号", "rating": 4.5, "tags": "轻食,沙拉", "distance_km": 1.5}
+]

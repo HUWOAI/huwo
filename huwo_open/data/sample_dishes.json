@@ -1,0 +1,14 @@
+[
+  {"name": "豆浆", "category": "饮品", "calories": 80, "protein": 4, "tags": "清淡,早餐"},
+  {"name": "水煮蛋", "category": "蛋类", "calories": 70, "protein": 6, "tags": "高蛋白,早餐"},
+  {"name": "全麦面包", "category": "主食", "calories": 120, "protein": 5, "tags": "低GI,早餐"},
+  {"name": "清蒸鲈鱼", "category": "荤菜", "calories": 180, "protein": 28, "tags": "低脂,高蛋白"},
+  {"name": "清炒时蔬", "category": "蔬菜", "calories": 60, "protein": 3, "tags": "清淡,低卡"},
+  {"name": "糙米饭", "category": "主食", "calories": 150, "protein": 4, "tags": "低GI"},
+  {"name": "番茄豆腐汤", "category": "荤菜", "calories": 90, "protein": 8, "tags": "清淡,低卡"},
+  {"name": "卤牛肉", "category": "卤味", "calories": 200, "protein": 30, "tags": "高蛋白"},
+  {"name": "凉拌黄瓜", "category": "蔬菜", "calories": 40, "protein": 1, "tags": "低卡"},
+  {"name": "衢州鸭头", "category": "小吃", "calories": 220, "protein": 18, "tags": "本地,重口"},
+  {"name": "烤饼", "category": "主食", "calories": 280, "protein": 6, "tags": "本地,碳水"},
+  {"name": "无糖酸奶", "category": "饮品", "calories": 70, "protein": 5, "tags": "低糖,加餐"}
+]

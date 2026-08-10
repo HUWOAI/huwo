@@ -1,0 +1,10 @@
+services:
+  huwo-open-demo:
+    build:
+      context: ..
+      dockerfile: deploy/Dockerfile
+    ports:
+      - "8765:8765"
+    env_file:
+      - ../.env
+    restart: unless-stopped
