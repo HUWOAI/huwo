@@ -6,8 +6,8 @@
 > **《吃什么，呼我》** 参赛项目内核开源模块（MIT）  
 > 公开仓库：**https://github.com/HUWOAI/huwo**  
 > 大赛官网：[GOAI 杭州人工智能创新大赛](https://goaihz.com/#intro)  
-> 参赛团队：杭州汇融 / 衢州呼我网络  
-> 联系：`chipcliffu@gmail.com`
+> 参赛团队：**衢州呼我网络科技有限公司**  
+> 负责人：Richard.Mao · 官网：www.huwo.xyz · 小程序/抖音：**呼我**
 
 本目录为 **HUWOAI/huwo** 开源首批代码，与闭源商业版 APP 后端（huwo.xyz）分离。
 
@@ -139,7 +139,12 @@ MIT License — 见 [LICENSE](./LICENSE)。
 
 ## 联系
 
-- 产品：https://www.huwo.xyz  
-- 开源仓库：https://github.com/HUWOAI/huwo  
-- Issue / PR：请在 GitHub 公开仓库提交  
-- 邮箱：chipcliffu@gmail.com  
+| 项目 | 信息 |
+|------|------|
+| 参赛团队 | 衢州呼我网络科技有限公司 |
+| 负责人 | Richard.Mao |
+| 官网 | https://www.huwo.xyz |
+| 小程序 / 抖音 | 呼我 |
+| 邮箱 | 36361139@qq.com |
+| 电话 | 13858039966 |
+| 开源仓库 | https://github.com/HUWOAI/huwo |
