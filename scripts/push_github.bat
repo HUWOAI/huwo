@@ -11,7 +11,7 @@ echo 即将推送到 https://github.com/HUWOAI/huwo.git (branch: main)
 echo.
 if defined GITHUB_TOKEN (
   echo 使用环境变量 GITHUB_TOKEN 推送...
-  git -c http.proxy=http://127.0.0.1:12334 -c https.proxy=http://127.0.0.1:12334 push https://%GITHUB_TOKEN%@github.com/HUWOAI/huwo.git main
+  git -c http.proxy=http://127.0.0.1:12334 -c https.proxy=http://127.0.0.1:12334 push https://x-access-token:%GITHUB_TOKEN%@github.com/HUWOAI/huwo.git main
 ) else (
   echo 若提示登录，用户名填 GitHub 用户名，密码处粘贴 Personal Access Token
   echo 或先设置: set GITHUB_TOKEN=ghp_xxxx  再运行本脚本
