@@ -76,6 +76,53 @@
   {
     "type": "function",
     "function": {
+      "name": "lookup_food",
+      "description": "搜索食物百科（食材/海鲜/蔬果），如小黄鱼、豆腐",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyword": { "type": "string" },
+          "limit": { "type": "integer", "default": 5 }
+        },
+        "required": ["keyword"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_food_profile",
+      "description": "获取食物完整百科：营养、产地季节、搭配、做法",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "food_id": { "type": "string" }
+        },
+        "required": ["food_id"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "check_food_suitability",
+      "description": "检查食物是否适合指定人群（痛风/孕妇/儿童等）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "food_id": { "type": "string" },
+          "population_tags": {
+            "type": "array",
+            "items": { "type": "string" }
+          }
+        },
+        "required": ["food_id"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
       "name": "robot_notify",
       "description": "向小虎桌面机器人发送展示指令（Demo 协议）",
       "parameters": {

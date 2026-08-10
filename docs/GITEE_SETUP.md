@@ -4,7 +4,7 @@
 
 ---
 
-## 一、Gitee 建仓（推荐国内评审访问）
+## 一、Gitee 建仓（推荐国内访问）
 
 1. 登录 [Gitee](https://gitee.com/) → **右上角 +** → **新建仓库**
 2. 填写：
@@ -23,7 +23,7 @@ cd D:\AIEAT\open
 git init
 git add .
 git status
-git commit -m "feat: HUWO AI GOAI 开源 Demo v0.1.0 — 饮食 Agent + 小虎机器人适配器"
+git commit -m "feat: HUWO AI 开源 Demo v0.1.0 — 饮食 Agent + 小虎机器人适配器"
 git branch -M main
 git remote add origin https://gitee.com/your-org/huwo-ai-open.git
 git push -u origin main
@@ -33,7 +33,7 @@ git push -u origin main
 
 ---
 
-## 二、GitHub 镜像（可选，面向国际评审）
+## 二、GitHub 镜像（可选，面向国际开发者）
 
 1. [GitHub New repository](https://github.com/new) → 名称 `huwo-ai-open` → Public → 不初始化 README
 2. 同一本地仓库可添加第二个 remote：
@@ -43,7 +43,7 @@ git remote add github https://github.com/your-org/huwo-ai-open.git
 git push -u github main
 ```
 
-GOAI 报名表填 **主仓库 URL**（Gitee 或 GitHub 二选一，建议 Gitee 国内访问快）。
+仓库 README 中填 **主仓库 URL**（Gitee 或 GitHub 二选一，建议 Gitee 国内访问快）。
 
 ---
 
@@ -51,15 +51,15 @@ GOAI 报名表填 **主仓库 URL**（Gitee 或 GitHub 二选一，建议 Gitee 
 
 | 项 | 建议 |
 |----|------|
-| 仓库描述 | GOAI · 吃什么呼我 · 饮食 AI Agent 开源 Demo · MIT |
-| Topics / 标签 | `goai`, `ai-agent`, `diet`, `fastapi`, `huwo`, `volcengine` |
+| 仓库描述 | 吃什么呼我 · 饮食 AI Agent 开源 Demo · MIT |
+| Topics / 标签 | `ai-agent`, `diet`, `fastapi`, `huwo`, `volcengine` |
 | 默认分支 | `main` |
 | README | 使用本仓根目录 `README.md`（已含快速开始） |
 | 安全 | 确认 `.env` 未提交；Gitee → 仓库 → 扫描密钥 |
 
 ---
 
-## 四、GOAI 报名表填写参考
+## 四、仓库信息填写参考
 
 | 字段 | 填写示例 |
 |------|----------|
@@ -79,8 +79,8 @@ A：不要。仅 `open/` 子目录作为公开仓，商业后端与密钥留在�
 **Q：push 被拒绝 large files？**  
 A：本仓不含视频/APK。若误加文件，检查 `.gitignore` 是否包含 `.venv/`。
 
-**Q：评审无法访问 Gitee？**  
-A：同步推 GitHub，或提供录屏 + 本地 `run_demo.bat` 步骤。
+**Q：国内访问 GitHub 较慢？**  
+A：同步镜像到 Gitee，README 同时放两个链接；或提供录屏 + 本地 `run_demo.bat` 步骤。
 
 ---
 

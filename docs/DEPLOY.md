@@ -18,13 +18,15 @@ cp .env.example .env
 docker compose -f deploy/docker-compose.yml up --build
 ```
 
-## 验证清单（GOAI 评审）
+## 验证清单
 
 - [ ] `GET /health` 返回 ok
+- [ ] `GET /demo/golden-path` 返回完整 trajectory（**推荐首选，无需 Key**）
+- [ ] `python scripts/run_demo.py golden`
 - [ ] `GET /demo/meal-plan` 返回三餐 JSON
 - [ ] `GET /demo/nearby?city=衢州` 返回 POI 列表
 - [ ] `POST /demo/tool` body `{"name":"robot_notify","arguments":{"expression":"happy","tts_text":"你好"}}`
-- [ ] 配置 Key 后 `POST /demo/chat` body `{"message":"帮我安排晚餐"}`
+- [ ] 配置 Key 后 `POST /demo/chat` → 响应含 `reply` + `trajectory`
 
 ## 与闭源生产环境
 

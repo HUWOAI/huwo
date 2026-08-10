@@ -26,3 +26,7 @@ def pois() -> list[dict]:
 
 def default_preferences() -> dict:
     return load_json("sample_preferences.json")  # type: ignore[return-value]
+
+
+def foods() -> list[dict]:
+    return load_json("sample_foods.json")  # type: ignore[return-value]

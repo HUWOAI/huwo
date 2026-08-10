@@ -1,12 +1,11 @@
-# 吃什么呼我 · HUWO AI — GOAI 开源 Demo
+# 吃什么呼我 · HUWO AI — 开源 Demo
 
 [![GitHub](https://img.shields.io/badge/GitHub-HUWOAI%2Fhuwo-181717?logo=github)](https://github.com/HUWOAI/huwo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
 
-> **《吃什么，呼我》** 参赛项目内核开源模块（MIT）  
+> **《吃什么，呼我》** 垂直饮食 Agent 内核开源模块（MIT）  
 > 公开仓库：**https://github.com/HUWOAI/huwo**  
-> 大赛官网：[GOAI 杭州人工智能创新大赛](https://goaihz.com/#intro)  
-> 参赛团队：**杭州汇融科技**  
+> 团队：**HUWO呼我 - 杭州汇融科技&衢州呼我网络**  
 > 负责人：Richard.Mao · 官网：www.huwo.xyz · 小程序/抖音：**呼我**
 
 本目录为 **HUWOAI/huwo** 开源首批代码，与闭源商业版 APP 后端（huwo.xyz）分离。
@@ -18,10 +17,10 @@
 **开源：可复用的 AI 饮食 Agent Skill、Prompt、小虎机器人协议适配器、Demo 部署与模型调用示例。**  
 **闭源：完整 APP 后端、账号/社交/碰一碰、用户数据、会员变现、私有知识库、量产固件。**
 
-详细说明见 [OPEN_BOUNDARY.md](./OPEN_BOUNDARY.md)（可直接粘贴 GOAI 报名表）。
+详细说明见 [OPEN_BOUNDARY.md](./OPEN_BOUNDARY.md)。
 
 - [Gitee/GitHub 建仓指南](./docs/GITEE_SETUP.md)
-- [GOAI 3 分钟答辩 Demo 脚本](./docs/GOAI_DEMO_SCRIPT.md)
+- [3 分钟 Demo 脚本](./docs/DEMO_SCRIPT.md)
 
 ---
 
@@ -33,9 +32,11 @@ python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
 pip install -r requirements.txt
+python scripts/run_demo.py golden
 python scripts/run_demo.py meal-plan
-python scripts/run_demo.py shopping
 ```
+
+`golden` 会打印一条完整 Agent 轨迹（规划 → 清单 → 附近 → 小虎通知），对应「帮爸爸安排清淡晚餐」故事。
 
 启动 Web Demo（无 Key 也能访问静态 Skill 接口）：
 
@@ -52,6 +53,7 @@ python -m uvicorn demo.app:app --host 127.0.0.1 --port 8765
 - http://127.0.0.1:8765/docs — Swagger
 - http://127.0.0.1:8765/demo/meal-plan — 三餐规划
 - http://127.0.0.1:8765/demo/nearby?city=衢州 — 附近 POI
+- http://127.0.0.1:8765/data/foods?q=小黄鱼 — **食物百科 Food Intel**（开源样本库）
 
 ---
 
@@ -77,7 +79,7 @@ cp .env.example .env
 open/
 ├── LICENSE                 MIT
 ├── README.md
-├── OPEN_BOUNDARY.md        GOAI 申报用开源边界说明
+├── OPEN_BOUNDARY.md        开源边界说明
 ├── requirements.txt
 ├── .env.example
 ├── huwo_open/              核心开源 Python 包
@@ -87,65 +89,26 @@ open/
 │   │   ├── tools_schema.json
 │   │   └── orchestrator.py 工具编排 + 可选 LLM 对话
 │   ├── providers/          火山方舟 / MiniMax 调用封装
-│   ├── robot/              小虎桌面机器人协议 + 适配器
-│   ├── integrations/       第三方 Deeplink 示例
-│   └── data/               示例菜品、POI、偏好 JSON
-├── demo/app.py             FastAPI Demo 入口
-├── scripts/                CLI、菜谱预处理
-├── deploy/                 Docker 部署
-├── docs/                   补充文档
-└── ui-examples/            基础 UI 组件示例说明
+│   └── robot/              小虎机器人协议适配器
+├── demo/                   FastAPI Demo 入口
+├── docs/                   部署与 Demo 脚本
+└── scripts/                本地运行脚本
 ```
 
 ---
 
-## 技术亮点（评审关注）
+## 与商业版关系
 
-1. **饮食 Agent Skill 编排**：工具定义 JSON + `execute_tool` 可扩展  
-2. **Prompt 工程**：系统提示词、识餐 JSON 输出模板独立文件维护  
-3. **小虎机器人适配器**：WebSocket 协议文档 + 内存模拟器（可接真机）  
-4. **多模型 Provider**：火山方舟、MiniMax H3 OpenAI 兼容封装  
-5. **可复现 Demo**：Docker / 本地脚本，示例数据集，无商业后端依赖  
-
----
-
-## 第三方依赖
-
-- 运行时：`fastapi`, `uvicorn`, `openai`, `python-dotenv`
-- 商业 API（用户自备 Key）：[火山引擎方舟](https://www.volcengine.com/product/ark)、[MiniMax](https://www.minimaxi.com/)
-- 闭源 APP 另接：MySQL、短信、RTC 等（不在本仓库）
+| 模块 | 开源 Demo | 商业版 huwo.xyz |
+|------|-----------|-----------------|
+| Agent Skill / Prompt | ✅ | ✅ |
+| 食物百科样本库 | ✅ 500+ | ✅ + 条码/USDA |
+| 账号 / 社交 / 群组 | ❌ | ✅ |
+| 全双工语音 / RTC | ❌ | ✅ |
+| 小虎硬件联动 | 协议示例 | ✅ 量产 |
 
 ---
 
-## 与闭源商业版关系
+## License
 
-| 模块 | 本开源仓库 | 商业版（huwo.xyz） |
-|------|------------|-------------------|
-| 饮食 Agent 框架 | ✓ Demo | ✓ 生产 + 私有 Prompt |
-| 用户账号 / JWT | ✗ | ✓ |
-| 碰一碰社交 | ✗ | ✓ |
-| 会员 / 支付 | ✗ | ✓ |
-| 完整 POI / 知识库 | 示例 JSON | ✓ 私有数据 |
-| 小虎量产固件 | ✗ | ✓ |
-
----
-
-## 许可证
-
-MIT License — 见 [LICENSE](./LICENSE)。  
-商标「呼我」「HUWO」「虎虎」「虎妹」归参赛团队所有，Fork 项目请勿冒用官方品牌。
-
----
-
-## 联系
-
-| 项目 | 信息 |
-|------|------|
-| 参赛团队 | 杭州汇融科技 |
-| 负责人 | Richard.Mao |
-| 官网 | https://www.huwo.xyz |
-| 小程序 / 抖音 | 呼我 |
-| 投资合作 | 36361139@qq.com · 13858039966 |
-| 渠道合作 | vip@huwo.xyz · 13355700033 |
-| 开源贡献 | chinamxm@qq.com · 13706700028 |
-| 开源仓库 | https://github.com/HUWOAI/huwo |
+MIT — 详见 [LICENSE](./LICENSE)

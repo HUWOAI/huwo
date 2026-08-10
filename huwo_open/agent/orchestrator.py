@@ -6,6 +6,7 @@ import json
 from pathlib import Path
 from typing import Any
 
+from huwo_open.agent.skills.food_intel import check_food_suitability, get_food_profile, lookup_food
 from huwo_open.agent.skills.meal_plan import build_meal_plan, build_shopping_list
 from huwo_open.agent.skills.nearby import search_nearby
 from huwo_open.agent.skills.nutrition import estimate_meal_from_text, search_dish
@@ -60,6 +61,15 @@ def execute_tool(name: str, args: dict[str, Any]) -> str:
             screen_title=args.get("screen_title", "HUWO"),
         )
         return json.dumps(result, ensure_ascii=False)
+    if name == "lookup_food":
+        return json.dumps(lookup_food(args.get("keyword", ""), int(args.get("limit", 5))), ensure_ascii=False)
+    if name == "get_food_profile":
+        return json.dumps(get_food_profile(args.get("food_id", "")), ensure_ascii=False)
+    if name == "check_food_suitability":
+        return json.dumps(
+            check_food_suitability(args.get("food_id", ""), args.get("population_tags")),
+            ensure_ascii=False,
+        )
     return json.dumps({"error": f"unknown tool {name}"}, ensure_ascii=False)
 
 
@@ -67,8 +77,11 @@ def get_robot_adapter() -> RobotAdapter:
     return _robot
 
 
-async def chat_once(user_message: str, history: list[dict] | None = None) -> str:
-    """Single-turn chat with tool calling (requires LLM API key)."""
+async def chat_once(user_message: str, history: list[dict] | None = None) -> dict[str, Any]:
+    """Single-turn chat with tool calling (requires LLM API key).
+
+    Returns ``{"reply": str, "trajectory": [{"name","arguments","result"}, ...]}``.
+    """
     from huwo_open.providers import create_llm_client
 
     client, model = create_llm_client()
@@ -88,12 +101,18 @@ async def chat_once(user_message: str, history: list[dict] | None = None) -> str
         max_tokens=1024,
     )
     msg = resp.choices[0].message
+    trajectory: list[dict[str, Any]] = []
     if msg.tool_calls:
         parts = [msg.content or ""]
         for tc in msg.tool_calls:
             fn = tc.function
             args = json.loads(fn.arguments or "{}")
             result = execute_tool(fn.name, args)
+            try:
+                result_obj: Any = json.loads(result)
+            except Exception:
+                result_obj = result
+            trajectory.append({"name": fn.name, "arguments": args, "result": result_obj})
             parts.append(f"\n[工具 {fn.name}] {result}")
-        return "".join(parts).strip()
-    return (msg.content or "").strip()
+        return {"reply": "".join(parts).strip(), "trajectory": trajectory}
+    return {"reply": (msg.content or "").strip(), "trajectory": trajectory}
