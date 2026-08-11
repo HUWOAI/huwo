@@ -16,7 +16,6 @@
 ## 30 秒跑通（无需大模型 Key）
 
 ```bash
-cd open   # 若已 clone 本仓库，则在仓库根目录
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
