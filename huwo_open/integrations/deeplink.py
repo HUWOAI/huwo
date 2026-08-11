@@ -44,3 +44,25 @@ def links_for_poi(poi: dict) -> list[dict]:
     else:
         order = ["meituan", "eleme"]
     return [links[k] for k in order if k in links]
+
+
+def links_for_shopping_list(items: list[str] | None = None, keyword: str = "") -> dict:
+    """买菜履约入口（开源示意：优先京东秒送叙事；真实开放平台密钥仅在商业版）。"""
+    names = [x for x in (items or []) if str(x).strip()]
+    kw = keyword.strip() or (" ".join(names[:3]) if names else "生鲜蔬菜")
+    enc = urllib.parse.quote(kw)
+    return {
+        "grocery_provider": "jd_daojia",
+        "grocery_provider_label": "京东秒送",
+        "keyword": kw,
+        "items": names,
+        "primary": {
+            "label": "去京东秒送买菜（示意链）",
+            "url": f"https://daojia.jd.com/html/index.html#search?key={enc}",
+        },
+        "alternates": [
+            {"label": "去盒马", "url": f"https://www.freshhema.com/search?keyword={enc}"},
+            {"label": "去美团买菜", "url": f"https://waimai.meituan.com/search?keyword={enc}"},
+        ],
+        "note": "开源 Demo 仅返回公开检索深链；京东秒送开放平台下单需商业版密钥。",
+    }

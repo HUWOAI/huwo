@@ -1,0 +1,45 @@
+#!/usr/bin/env python3
+"""开源 Demo 冒烟：golden / care / housekeeping 轨迹可跑通。"""
+
+from __future__ import annotations
+
+import json
+import sys
+from pathlib import Path
+
+ROOT = Path(__file__).resolve().parent.parent
+sys.path.insert(0, str(ROOT))
+
+from scripts.run_demo import _care, _golden, _housekeeping  # noqa: E402
+
+
+def main() -> None:
+    g = _golden()
+    assert len(g["trajectory"]) >= 4, g
+    names = [t["name"] for t in g["trajectory"]]
+    assert "generate_meal_plan" in names and "open_grocery_checkout" in names
+
+    c = _care()
+    assert c["trajectory"][0]["result"].get("medicine_name")
+    assert "disclaimer" in c["trajectory"][0]["result"]
+
+    h = _housekeeping()
+    assert h["trajectory"][0]["result"].get("score_overall") is not None
+    assert h["trajectory"][3]["result"].get("recommendations")
+
+    schema = json.loads((ROOT / "huwo_open" / "agent" / "tools_schema.json").read_text(encoding="utf-8"))
+    tool_names = {t["function"]["name"] for t in schema}
+    for required in (
+        "open_grocery_checkout",
+        "create_med_reminder",
+        "fair_interview_score",
+        "publish_service_profile",
+    ):
+        assert required in tool_names, required
+
+    print("OPEN smoke PASSED")
+    print(json.dumps({"golden_tools": names, "schema_count": len(tool_names)}, ensure_ascii=False))
+
+
+if __name__ == "__main__":
+    main()

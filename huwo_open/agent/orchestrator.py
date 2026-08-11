@@ -7,10 +7,19 @@ from pathlib import Path
 from typing import Any
 
 from huwo_open.agent.skills.food_intel import check_food_suitability, get_food_profile, lookup_food
+from huwo_open.agent.skills.housekeeping import (
+    fair_interview_score,
+    get_cert_study_pack,
+    publish_service_demand,
+    publish_service_profile,
+    recommend_service_workers,
+)
 from huwo_open.agent.skills.meal_plan import build_meal_plan, build_shopping_list
+from huwo_open.agent.skills.med_reminder import create_med_reminder, list_med_reminders
 from huwo_open.agent.skills.nearby import search_nearby
 from huwo_open.agent.skills.nutrition import estimate_meal_from_text, search_dish
 from huwo_open.data.loader import default_preferences
+from huwo_open.integrations.deeplink import links_for_shopping_list
 from huwo_open.robot.adapter import RobotAdapter
 
 PROMPTS_DIR = Path(__file__).resolve().parent / "prompts"
@@ -70,6 +79,77 @@ def execute_tool(name: str, args: dict[str, Any]) -> str:
             check_food_suitability(args.get("food_id", ""), args.get("population_tags")),
             ensure_ascii=False,
         )
+    if name == "open_grocery_checkout":
+        shop = build_shopping_list()
+        names = []
+        if isinstance(shop, dict):
+            for it in shop.get("items") or shop.get("list") or []:
+                if isinstance(it, dict):
+                    names.append(str(it.get("name") or it.get("item") or ""))
+                else:
+                    names.append(str(it))
+        return json.dumps(
+            links_for_shopping_list(names, keyword=str(args.get("keyword") or "")),
+            ensure_ascii=False,
+        )
+    if name == "create_med_reminder":
+        return json.dumps(
+            create_med_reminder(
+                medicine_name=str(args.get("medicine_name") or ""),
+                member_name=str(args.get("member_name") or "本人"),
+                dosage=str(args.get("dosage") or ""),
+                schedule_times=args.get("schedule_times"),
+                meal_relation=str(args.get("meal_relation") or "遵医嘱"),
+                notes=str(args.get("notes") or ""),
+            ),
+            ensure_ascii=False,
+        )
+    if name == "list_med_reminders":
+        return json.dumps(list_med_reminders(), ensure_ascii=False)
+    if name == "fair_interview_score":
+        return json.dumps(
+            fair_interview_score(
+                roles=str(args.get("roles") or "保姆"),
+                years_exp=float(args.get("years_exp") or 0),
+                certificates=str(args.get("certificates") or ""),
+                answer_quality=float(args.get("answer_quality") or 7),
+            ),
+            ensure_ascii=False,
+        )
+    if name == "publish_service_profile":
+        return json.dumps(
+            publish_service_profile(
+                roles=str(args.get("roles") or ""),
+                resume_text=str(args.get("resume_text") or ""),
+                display_name=str(args.get("display_name") or "求职者"),
+                years_exp=float(args.get("years_exp") or 0),
+                city=str(args.get("city") or pref.get("city") or "杭州"),
+                certificates=str(args.get("certificates") or ""),
+                score_overall=args.get("score_overall"),
+            ),
+            ensure_ascii=False,
+        )
+    if name == "publish_service_demand":
+        return json.dumps(
+            publish_service_demand(
+                title=str(args.get("title") or ""),
+                service_types=str(args.get("service_types") or ""),
+                city=str(args.get("city") or pref.get("city") or "杭州"),
+                schedule_text=str(args.get("schedule_text") or ""),
+                budget_text=str(args.get("budget_text") or ""),
+            ),
+            ensure_ascii=False,
+        )
+    if name == "recommend_service_workers":
+        return json.dumps(
+            recommend_service_workers(
+                demand_id=args.get("demand_id"),
+                limit=int(args.get("limit") or 3),
+            ),
+            ensure_ascii=False,
+        )
+    if name == "get_cert_study_pack":
+        return json.dumps(get_cert_study_pack(str(args.get("role") or "")), ensure_ascii=False)
     return json.dumps({"error": f"unknown tool {name}"}, ensure_ascii=False)
 
 

@@ -123,6 +123,131 @@
   {
     "type": "function",
     "function": {
+      "name": "open_grocery_checkout",
+      "description": "打开买菜履约入口：优先返回京东秒送深链示意，用于「去买菜」「京东秒送下单」",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "keyword": { "type": "string", "description": "搜索关键词，如生鲜蔬菜" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "create_med_reminder",
+      "description": "创建吃药日程提醒（任务助手，非诊疗/审方）。须声明：仅供参考，用药请遵医嘱。",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "member_name": { "type": "string" },
+          "medicine_name": { "type": "string" },
+          "dosage": { "type": "string" },
+          "schedule_times": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "如 [\"08:00\",\"20:00\"]"
+          },
+          "meal_relation": { "type": "string" },
+          "notes": { "type": "string" }
+        },
+        "required": ["medicine_name"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "list_med_reminders",
+      "description": "列出 Demo 进程内已设置的吃药日程提醒",
+      "parameters": { "type": "object", "properties": {} }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "fair_interview_score",
+      "description": "家政 AI 公平面试示意评分（规则透明，降低人为偏见）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "roles": { "type": "string" },
+          "years_exp": { "type": "number" },
+          "certificates": { "type": "string" },
+          "answer_quality": { "type": "number", "description": "0-10 沟通/答题质量" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "publish_service_profile",
+      "description": "将家政求职者 AI 简历发布到 Demo 供应市场（内存）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "display_name": { "type": "string" },
+          "roles": { "type": "string" },
+          "years_exp": { "type": "number" },
+          "city": { "type": "string" },
+          "certificates": { "type": "string" },
+          "resume_text": { "type": "string" },
+          "score_overall": { "type": "number" }
+        },
+        "required": ["roles", "resume_text"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "publish_service_demand",
+      "description": "将雇主上门服务需求发布到 Demo 需求市场（内存）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "title": { "type": "string" },
+          "service_types": { "type": "string" },
+          "city": { "type": "string" },
+          "schedule_text": { "type": "string" },
+          "budget_text": { "type": "string" }
+        },
+        "required": ["title", "service_types"]
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "recommend_service_workers",
+      "description": "根据需求从 Demo 供应市场推荐服务人员",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "demand_id": { "type": "integer" },
+          "limit": { "type": "integer", "default": 3 }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "get_cert_study_pack",
+      "description": "获取人社相关考证资料包示意",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "role": { "type": "string", "description": "岗位关键词如育婴/月嫂/护工" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
       "name": "robot_notify",
       "description": "向小虎桌面机器人发送展示指令（Demo 协议）",
       "parameters": {

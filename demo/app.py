@@ -2,6 +2,7 @@
 
 from __future__ import annotations
 
+import json
 import os
 from pathlib import Path
 
@@ -25,9 +26,9 @@ from huwo_open.agent.skills.nearby import search_nearby  # noqa: E402
 from huwo_open.data.loader import default_preferences, dishes, foods, pois  # noqa: E402
 
 app = FastAPI(
-    title="吃什么呼我 — 开源 Demo",
-    description="内核开源模块：饮食 Agent Skill + 小虎机器人适配器 + 第三方模型调用示例",
-    version="0.1.0-open",
+    title="呼我 HUWO — 开源 Demo",
+    description="家庭健康服务平台内核：饮食决策 · 吃药提醒 · 家政公平评测 · 小虎协议 · LLM 调用示例（MIT）",
+    version="0.2.0-open",
 )
 app.add_middleware(
     CORSMiddleware,
@@ -54,9 +55,12 @@ def health():
 @app.get("/")
 def root():
     return {
-        "project": "吃什么呼我 · HUWO AI Open Demo",
+        "project": "呼我 HUWO · Open Demo (MIT)",
+        "team": "呼我网络科技 / Callme Group LLC",
         "docs": "/docs",
-        "note": "商业版 APP 后端、社交、账号体系不在本仓库",
+        "live_product": "https://www.huwo.xyz/AIEAT/",
+        "note": "商业版 APP 后端、账号/社交、生产数据不在本仓库",
+        "demos": ["/demo/golden-path", "/demo/care-path", "/demo/housekeeping-path"],
     }
 
 
@@ -196,11 +200,12 @@ async def demo_chat(body: ChatIn):
 
 @app.get("/demo/golden-path")
 def demo_golden_path():
-    """评审可一键验证的黄金闭环（无需大模型 Key）。"""
+    """评审可一键验证的饮食黄金闭环（无需大模型 Key）。"""
     pref = default_preferences()
     meal = build_meal_plan(goal="清淡")
     shop = build_shopping_list()
     nearby = search_nearby(city=pref.get("city") or "衢州", poi_type="restaurant")
+    grocery = json.loads(execute_tool("open_grocery_checkout", {"keyword": "清淡生鲜"}))
     robot = get_robot_adapter().notify(
         expression="happy",
         tts_text="今晚清蒸鲈鱼，少油少盐",
@@ -209,6 +214,7 @@ def demo_golden_path():
     trajectory = [
         {"name": "generate_meal_plan", "arguments": {"goal": "清淡"}, "result": meal},
         {"name": "get_shopping_list", "arguments": {}, "result": shop},
+        {"name": "open_grocery_checkout", "arguments": {"keyword": "清淡生鲜"}, "result": grocery},
         {"name": "search_nearby", "arguments": {"poi_type": "restaurant"}, "result": nearby},
         {"name": "robot_notify", "arguments": {"tts_text": "今晚清蒸鲈鱼"}, "result": robot},
     ]
@@ -217,12 +223,95 @@ def demo_golden_path():
         "closed_loop": [
             "任务理解：清淡 + 花生过敏 + 晚餐",
             "计划生成：三餐/晚餐推荐",
-            "工具调用：购物清单 + 附近餐厅",
+            "工具调用：购物清单 + 京东秒送示意链 + 附近餐厅",
             "结果交付：小虎机器人屏显 + TTS",
             "可验证：本接口返回完整 trajectory",
         ],
         "trajectory": trajectory,
         "preferences": pref,
+    }
+
+
+@app.get("/demo/care-path")
+def demo_care_path():
+    """健康关怀：吃药提醒闭环（任务助手边界）。"""
+    create = json.loads(
+        execute_tool(
+            "create_med_reminder",
+            {
+                "member_name": "爸爸",
+                "medicine_name": "阿司匹林肠溶片",
+                "dosage": "每次1片",
+                "schedule_times": ["08:00", "20:00"],
+                "meal_relation": "饭后",
+            },
+        )
+    )
+    listed = json.loads(execute_tool("list_med_reminders", {}))
+    robot = get_robot_adapter().notify(
+        expression="think",
+        tts_text="爸爸，该吃药了",
+        screen_title="吃药提醒",
+    )
+    return {
+        "story": "设置吃药提醒并播报（非诊疗/审方）",
+        "trajectory": [
+            {"name": "create_med_reminder", "result": create},
+            {"name": "list_med_reminders", "result": listed},
+            {"name": "robot_notify", "result": robot},
+        ],
+    }
+
+
+@app.get("/demo/housekeeping-path")
+def demo_housekeeping_path():
+    """家政 AI 公平面试 + 供需匹配闭环。"""
+    score = json.loads(
+        execute_tool(
+            "fair_interview_score",
+            {
+                "roles": "育婴嫂",
+                "years_exp": 5,
+                "certificates": "育婴员,健康证",
+                "answer_quality": 8.5,
+            },
+        )
+    )
+    profile = json.loads(
+        execute_tool(
+            "publish_service_profile",
+            {
+                "display_name": "小周",
+                "roles": "育婴嫂",
+                "years_exp": 5,
+                "city": "杭州",
+                "certificates": "育婴员,健康证",
+                "resume_text": "五年育婴经验，持证上岗。",
+                "score_overall": score["score_overall"],
+            },
+        )
+    )
+    demand = json.loads(
+        execute_tool(
+            "publish_service_demand",
+            {
+                "title": "住家育婴一周体验",
+                "service_types": "育婴嫂",
+                "city": "杭州",
+            },
+        )
+    )
+    rec = json.loads(execute_tool("recommend_service_workers", {"demand_id": demand["id"], "limit": 3}))
+    pack = json.loads(execute_tool("get_cert_study_pack", {"role": "育婴"}))
+    return {
+        "story": "家政面试评测 → 挂牌 → 需求 → 推荐 → 考证资料",
+        "trajectory": [
+            {"name": "fair_interview_score", "result": score},
+            {"name": "publish_service_profile", "result": profile},
+            {"name": "publish_service_demand", "result": demand},
+            {"name": "recommend_service_workers", "result": rec},
+            {"name": "get_cert_study_pack", "result": pack},
+        ],
     }
 
 
