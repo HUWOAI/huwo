@@ -1,35 +1,22 @@
-# 呼我 HUWO — 开源 Demo
+# 呼我 HUWO — 开源 Demo（MIT）
 
-[![GitHub](https://img.shields.io/badge/GitHub-HUWOAI%2Fhuwo-181717?logo=github)](https://github.com/HUWOAI/huwo)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](./LICENSE)
+[![GitHub](https://img.shields.io/badge/GitHub-HUWOAI%2Fhuwo-181717?logo=github)](https://github.com/HUWOAI/huwo)
 
-> **呼我人工智能 · 家庭健康服务平台** — Agent 内核开源模块（MIT）  
+> **呼我人工智能 · 家庭健康服务平台** — Agent 内核开源模块  
 > 口号：**您有所呼，我有所应**  
-> 公开仓库：**https://github.com/HUWOAI/huwo**  
-> 团队：**呼我网络科技** · EN：**Callme Group LLC**  
-> 负责人：毛新明 Richard · 官网：https://www.huwo.xyz · 线上 Demo：https://www.huwo.xyz/AIEAT/
+> 团队：**呼我网络科技**（EN: Callme Group LLC）  
+> 线上产品：https://www.huwo.xyz/AIEAT/  
+> 本仓库：**可运行、可演示、可复制**的饮食 / 关怀 / 家政 Agent 闭环 Demo
 
-本目录为 **HUWOAI/huwo** 开源代码，与闭源商业版 APP 后端分离。对齐 GOAI 赛道二「无界应用｜Boundless Agents」：**可运行、可演示、可复制**，强调工具调用与任务闭环。
-
----
-
-## 开源边界（一句话）
-
-**开源：可复用的家庭健康 Agent Skill / Tool Schema、Prompt、小虎协议适配器、Demo 与模型调用示例。**  
-**闭源：完整 APP 后端、账号/社交、用户家庭数据、会员变现、私有知识库、量产固件、开放平台生产密钥。**
-
-详细说明见 [OPEN_BOUNDARY.md](./OPEN_BOUNDARY.md)。
-
-- [Gitee/GitHub 建仓指南](./docs/GITEE_SETUP.md)
-- [3 分钟 Demo 脚本](./docs/DEMO_SCRIPT.md)
-- [合规要点摘要](./docs/COMPLIANCE.md)
+对齐赛道关键词：行业 Agent、任务闭环、工具调用、多模态入口（语音/多端）、数据合规。
 
 ---
 
 ## 30 秒跑通（无需大模型 Key）
 
 ```bash
-cd open
+cd open   # 若已 clone 本仓库，则在仓库根目录
 python -m venv .venv
 # Windows: .venv\Scripts\activate
 # macOS/Linux: source .venv/bin/activate
@@ -41,9 +28,9 @@ python scripts/run_demo.py housekeeping
 
 | 命令 | 闭环 |
 |------|------|
-| `golden` | 清淡晚餐 → 清单 → 京东秒送示意 → 附近 → 小虎通知 |
-| `care` | 吃药提醒创建/列表 → 小虎播报 |
-| `housekeeping` | 公平面试 → 挂牌 → 需求 → 推荐 → 考证包 |
+| `golden` | 清淡晚餐约束 → 清单 → 买菜深链示意 → 附近 → 小虎 `robot_notify` |
+| `care` | 吃药提醒创建/列表示意（任务助手边界，非审方） |
+| `housekeeping` | 公平面试示意 → 挂牌 → 推荐 |
 
 启动 Web Demo：
 
@@ -55,11 +42,34 @@ python -m uvicorn demo.app:app --host 127.0.0.1 --port 8765
 - http://127.0.0.1:8765/demo/golden-path  
 - http://127.0.0.1:8765/demo/care-path  
 - http://127.0.0.1:8765/demo/housekeeping-path  
-- http://127.0.0.1:8765/meta/tools — 完整 Tool Schema  
+- http://127.0.0.1:8765/meta/tools — Tool Schema  
+- http://127.0.0.1:8765/demo/metrics — 评测自检摘要  
 
 ---
 
-## 配置大模型（可选，用于 `/demo/chat`）
+## 开源边界（一句话）
+
+**开源**：可复用的家庭健康 Agent Skill / Tool Schema、Prompt、小虎协议适配器、Demo、模型调用示例。  
+**闭源**：完整 APP 后端、账号/社交、用户家庭数据、会员变现、生产密钥、量产固件。
+
+详见 [OPEN_BOUNDARY.md](./OPEN_BOUNDARY.md)。
+
+---
+
+## 文档
+
+| 文档 | 说明 |
+|------|------|
+| [docs/DEMO_SCRIPT.md](./docs/DEMO_SCRIPT.md) | 3 分钟演示脚本 |
+| [docs/COMPLIANCE.md](./docs/COMPLIANCE.md) | 合规摘要 |
+| [docs/METRICS.md](./docs/METRICS.md) | 评测指标与复现 |
+| [docs/THIRD_PARTY.md](./docs/THIRD_PARTY.md) | 商业 API / 依赖披露 |
+| [docs/DEPLOY.md](./docs/DEPLOY.md) | 部署说明 |
+| [docs/GITEE_SETUP.md](./docs/GITEE_SETUP.md) | 镜像说明 |
+
+---
+
+## 可选：配置大模型（`/demo/chat`）
 
 ```bash
 cp .env.example .env
@@ -72,47 +82,31 @@ cp .env.example .env
 | `MINIMAX_API_KEY` | MiniMax 示例 |
 | `LLM_PROVIDER` | `volc` 或 `minimax` |
 
+**无 Key 不影响** `golden` / `care` / `housekeeping` 规则路径复现。
+
 ---
 
 ## 目录结构
 
 ```
-open/
 ├── LICENSE                 MIT
 ├── README.md
 ├── OPEN_BOUNDARY.md
 ├── requirements.txt
 ├── .env.example
 ├── huwo_open/
-│   ├── agent/
-│   │   ├── prompts/
-│   │   ├── skills/         饮食 / 百科 / 吃药 / 家政
-│   │   ├── tools_schema.json
-│   │   └── orchestrator.py
-│   ├── providers/          火山方舟 / MiniMax
+│   ├── agent/              prompts · skills · tools_schema · orchestrator
+│   ├── providers/          火山方舟 / MiniMax 示例
 │   ├── integrations/       买菜深链示意
 │   └── robot/              小虎协议适配器
 ├── demo/                   FastAPI Demo
 ├── docs/
-└── scripts/
+└── scripts/run_demo.py
 ```
 
 ---
 
-## 与商业版关系
+## 商标与联系
 
-| 模块 | 开源 Demo | 商业版 huwo.xyz |
-|------|-----------|-----------------|
-| Agent Skill / Schema | ✅ | ✅ |
-| 食物百科样本库 | ✅ 500+ | ✅ + 条码/USDA |
-| 吃药提醒 | ✅ 内存 Demo | ✅ MySQL 持久化 |
-| 家政公平评测/供需 | ✅ 内存 Demo | ✅ 服务市场 |
-| 京东秒送 | ✅ 深链示意 | ✅ 开放平台对接 |
-| 账号 / 社交 / 群组 | ❌ | ✅ |
-| 全双工语音 / RTC | ❌ | ✅ |
-
----
-
-## License
-
-MIT — 详见 [LICENSE](./LICENSE)。商标「呼我」「HUWO」及闭源服务不在许可范围内。
+「呼我」「HUWO」商标不属于 MIT 授权范围。  
+官网：https://www.huwo.xyz · 开源协作见仓库 Issues。

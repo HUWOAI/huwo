@@ -315,6 +315,43 @@ def demo_housekeeping_path():
     }
 
 
+@app.get("/demo/metrics")
+def demo_metrics():
+    """评测自检摘要：评委/开发者可核对黄金路径是否可复现。"""
+    golden = demo_golden_path()
+    names = [t.get("name") for t in golden.get("trajectory") or []]
+    required = {
+        "generate_meal_plan",
+        "get_shopping_list",
+        "open_grocery_checkout",
+        "search_nearby",
+        "robot_notify",
+    }
+    missing = sorted(required - set(names))
+    return {
+        "ok": len(missing) == 0,
+        "checks": {
+            "golden_path_tools": {
+                "expected": sorted(required),
+                "actual": names,
+                "missing": missing,
+            },
+            "sample_data": {
+                "dishes": len(dishes()),
+                "foods": len(foods()),
+                "pois": len(pois()),
+            },
+            "llm_key_required_for_rule_paths": False,
+        },
+        "docs": ["/docs/METRICS.md", "/docs/COMPLIANCE.md", "/docs/THIRD_PARTY.md"],
+        "reproduce": [
+            "python scripts/run_demo.py golden",
+            "python -m uvicorn demo.app:app --port 8765",
+            "GET /demo/golden-path",
+        ],
+    }
+
+
 @app.get("/demo/robot/events")
 def robot_events():
     return {"events": get_robot_adapter().drain_events()}

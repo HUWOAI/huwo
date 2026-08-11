@@ -1,40 +1,37 @@
 # 3 分钟 Demo 脚本（开源内核 · 黄金闭环）
 
-> 团队：**呼我网络科技** · Callme Group LLC  
+> 团队：**呼我网络科技**  
 > 产品：呼我人工智能 · 家庭健康服务平台  
-> 分屏：左 Swagger/终端 · 右 H5 或 PPT
+> 赛题对齐：生活消费 Agent（多端入口：手机 / 语音 / 眼镜·机器人延伸）
 
 ---
 
 ## 0:00–0:25 开场
 
-「我们是 **呼我网络科技**。口号：**您有所呼，我有所应**。我们做家庭健康服务平台上的 Boundless Agent：饮食决策、健康关怀、家政服务——可验证任务闭环，不是陪聊。」
-
-屏幕：官网或 H5 首页。
+「我们是呼我网络科技。口号：您有所呼，我有所应。我们做家庭健康服务平台上的 Boundless Agent：饮食决策、健康关怀、家政服务——可验证任务闭环，不是陪聊。」
 
 ---
 
 ## 0:25–1:00 饮食黄金闭环（必做）
 
-```powershell
-cd open
-python scripts\run_demo.py golden
+```bash
+python scripts/run_demo.py golden
 ```
 
 或：`http://127.0.0.1:8765/demo/golden-path`
 
-口述：「轨迹：三餐规划 → 采购清单 → 京东秒送示意链 → 附近 → 小虎 robot_notify。无大模型 Key 可验证。」
+口述：「轨迹含三餐规划 → 采购清单 → 买菜深链示意 → 附近 → 小虎 robot_notify。无大模型 Key 可验证。」
 
 ---
 
 ## 1:00–1:25 健康关怀 + 家政（加分）
 
-```powershell
-python scripts\run_demo.py care
-python scripts\run_demo.py housekeeping
+```bash
+python scripts/run_demo.py care
+python scripts/run_demo.py housekeeping
 ```
 
-口述：「吃药提醒是任务助手边界，非审方；家政面试规则评分，降低人为偏见。」
+口述：「吃药提醒是任务助手边界，非审方；家政面试规则评分示意，降低人为偏见。」
 
 ---
 
@@ -42,29 +39,16 @@ python scripts\run_demo.py housekeeping
 
 打开 https://www.huwo.xyz/AIEAT/  
 发送：「帮爸爸安排今晚清淡晚餐，花生过敏」  
-**指着 Agent 轨迹面板**讲工具名。
+指着 Agent 轨迹面板讲工具名。
 
 ---
 
-## 2:00–2:30 开源边界
+## 2:00–2:40 开源边界 + 合规
 
-「MIT 开源 Skill / Schema / Prompt / 小虎适配器；账号、社交、生产密钥闭源。见 OPEN_BOUNDARY.md。」
-
----
-
-## 2:30–3:00 合规 + 收束
-
-「营养/用药不替代医疗；保险仅引导不承保。多端：手机、小虎、眼镜路线图。您有所呼，我有所应。」
+「MIT 开源 Skill / Schema / Prompt / 小虎适配器；账号、社交、生产密钥闭源。营养/用药不替代医疗。」
 
 ---
 
-## 评委问答要点
+## 2:40–3:00 收束
 
-**Q：为什么不是 Chatbot？**  
-A：有工具调用与 trajectory；输入到规划/提醒/匹配可验证交付。
-
-**Q：为何不开源全部 APP？**  
-A：内核开源保证可复现；账号与用户数据是商业与合规边界。
-
-**Q：和通用助手区别？**  
-A：家庭约束记忆 + 三引擎闭环 + 持证经营叙事；不做泛闲聊。
+「您有所呼，我有所应。」
