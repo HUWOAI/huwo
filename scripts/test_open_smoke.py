@@ -13,6 +13,14 @@ sys.path.insert(0, str(ROOT))
 from scripts.run_demo import _care, _golden, _housekeeping  # noqa: E402
 
 
+def test_med_reminder_string_schedule_times():
+    from huwo_open.agent.skills.med_reminder import create_med_reminder, reset_store
+
+    reset_store()
+    row = create_med_reminder(medicine_name="维生素C", schedule_times="08:00,20:00")
+    assert row["schedule_times"] == ["08:00", "20:00"]
+
+
 def main() -> None:
     g = _golden()
     assert len(g["trajectory"]) >= 4, g
@@ -36,6 +44,8 @@ def main() -> None:
         "publish_service_profile",
     ):
         assert required in tool_names, required
+
+    test_med_reminder_string_schedule_times()
 
     print("OPEN smoke PASSED")
     print(json.dumps({"golden_tools": names, "schema_count": len(tool_names)}, ensure_ascii=False))
