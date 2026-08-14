@@ -4,11 +4,13 @@
 
 本项目采用**内核开源模式**：核心 Agent Skill 与 Demo 可复现，商业版完整能力独立演进。对齐 GOAI「Open. Share. Build.」。
 
+**English:** [OPEN_BOUNDARY.en.md](./OPEN_BOUNDARY.en.md)
+
 **1、开源部分**
 
-家庭健康服务平台 Agent 核心 Skill（饮食决策、食物百科、吃药提醒示意、家政 AI 公平评测与供需示意）、菜谱/营养脚本、买菜深链示意、小虎桌面机器人交互适配器与通信协议、Demo 部署脚本、火山引擎 / MiniMax 调用示例、示例配置与技术文档。
+家庭健康 / 家政可信直聘 Agent 核心 Skill（饮食决策、食物百科、吃药提醒示意、**国标公平评测与供需匹配**）、**≥3 条匹配解释字段**、**在岗事件帧与离岗 ACL 示意**、菜谱/营养脚本、买菜深链示意、小虎桌面机器人交互适配器与通信协议、Demo 部署脚本、火山引擎 / MiniMax 调用示例、示例配置与技术文档。
 
-托管于 GitHub 公开仓库（本 `open/` 目录），采用 **MIT** 开源许可证。开发者可按 README 无 Key 复现黄金闭环。
+托管于 GitHub 公开仓库，采用 **MIT** 开源许可证。开发者可按 README **无 Key** 复现黄金闭环（含 `housekeeping` 测→晒→配→看→关）。
 
 公开仓库：**https://github.com/HUWOAI/huwo**（MIT 开源 Demo）
 
@@ -25,8 +27,7 @@
 在本仓库（单一 MIT 仓）内持续迭代 Skill、评测脚本与文档；按社区反馈增加样例数据与机器人协议示例。不拆分虚构的多子仓；量产固件与商业后端仍保持闭源。
 
 **知识产权**全部归属 **呼我网络科技**（EN: **Callme Group LLC**）所有。  
-**联系**：Richard.Mao · www.huwo.xyz · 小程序/抖音：呼我  
-投资 36361139@qq.com / +86 13858039966 · 渠道 vip@huwo.xyz / +86 13858039966 · 开源 chinamxm@qq.com / +86 13858039966
+官网：www.huwo.xyz · 开源协作见 GitHub Issues。
 
 ---
 
@@ -36,7 +37,7 @@
 A：差异化在家庭记忆、合规经营与多端协同，需要持续运营成本；开源部分聚焦可复现的 Skill 与 Demo，满足赛事「可复制」要求。
 
 **Q：商业版与 Demo 如何对应？**  
-A：Demo 提供等价 Tool Schema 与轨迹；商业版在 huwo.xyz 提供账号、群组、RTC、服务市场持久化与硬件联动。
+A：Demo 提供等价 Tool Schema 与轨迹；商业版在 huwo.xyz 提供账号、群组、RTC、服务市场持久化、眼镜 ACL 与硬件联动。
 
 **Q：可以 fork 后商用吗？**  
 A：MIT 允许 fork 与修改，但商标「呼我」「HUWO」及闭源服务不在许可范围内。
