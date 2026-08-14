@@ -248,6 +248,63 @@
   {
     "type": "function",
     "function": {
+      "name": "start_care_employment",
+      "description": "确认上岗配对，开启眼镜第一视角时间线（Demo 内存）",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "profile_id": { "type": "integer" },
+          "caregiver_name": { "type": "string" },
+          "note": { "type": "string" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "post_on_duty_moment",
+      "description": "写入在岗事件帧：看辅食 / 记买菜 / 记带娃瞬间",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "employment_id": { "type": "integer" },
+          "content": { "type": "string" },
+          "kind": { "type": "string", "enum": ["weaning", "grocery", "care", "moment"] },
+          "media_url": { "type": "string" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "end_care_shift",
+      "description": "结束在岗：生成复盘评分并关闭雇主影像 ACL",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "employment_id": { "type": "integer" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
+      "name": "list_on_duty_moments",
+      "description": "列出在岗时间线；离岗后返回空列表与 ACL 回执",
+      "parameters": {
+        "type": "object",
+        "properties": {
+          "employment_id": { "type": "integer" }
+        }
+      }
+    }
+  },
+  {
+    "type": "function",
+    "function": {
       "name": "robot_notify",
       "description": "向小虎桌面机器人发送展示指令（Demo 协议）",
       "parameters": {

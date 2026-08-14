@@ -92,14 +92,40 @@ def _housekeeping() -> dict:
     demand_id = json.loads(demand)["id"]
     rec = execute_tool("recommend_service_workers", {"demand_id": demand_id, "limit": 3})
     pack = execute_tool("get_cert_study_pack", {"role": "育婴"})
+    profile_id = json.loads(profile)["id"]
+    emp = execute_tool(
+        "start_care_employment",
+        {"profile_id": profile_id, "caregiver_name": "小周", "note": "Demo 上岗"},
+    )
+    emp_id = json.loads(emp)["id"]
+    weaning = execute_tool(
+        "post_on_duty_moment",
+        {"employment_id": emp_id, "kind": "weaning", "content": "看辅食 · 眼镜第一视角"},
+    )
+    grocery = execute_tool(
+        "post_on_duty_moment",
+        {"employment_id": emp_id, "kind": "grocery", "content": "记买菜 · 配料表"},
+    )
+    care = execute_tool(
+        "post_on_duty_moment",
+        {"employment_id": emp_id, "kind": "care", "content": "记带娃瞬间"},
+    )
+    ended = execute_tool("end_care_shift", {"employment_id": emp_id})
+    closed = execute_tool("list_on_duty_moments", {"employment_id": emp_id})
     return {
-        "story": "家政 AI 公平面试 → 挂牌 → 需求匹配 → 考证资料",
+        "story": "测→晒→配→看→关：公平面试 · 挂牌 · ≥3条匹配解释 · 眼镜三捷径 · 离岗 ACL",
         "trajectory": [
             {"name": "fair_interview_score", "result": json.loads(score)},
             {"name": "publish_service_profile", "result": json.loads(profile)},
             {"name": "publish_service_demand", "result": json.loads(demand)},
             {"name": "recommend_service_workers", "result": json.loads(rec)},
             {"name": "get_cert_study_pack", "result": json.loads(pack)},
+            {"name": "start_care_employment", "result": json.loads(emp)},
+            {"name": "post_on_duty_moment", "result": json.loads(weaning)},
+            {"name": "post_on_duty_moment", "result": json.loads(grocery)},
+            {"name": "post_on_duty_moment", "result": json.loads(care)},
+            {"name": "end_care_shift", "result": json.loads(ended)},
+            {"name": "list_on_duty_moments", "result": json.loads(closed)},
         ],
     }
 

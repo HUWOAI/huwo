@@ -61,6 +61,7 @@ def root():
         "live_product": "https://www.huwo.xyz/AIEAT/",
         "note": "商业版 APP 后端、账号/社交、生产数据不在本仓库",
         "demos": ["/demo/golden-path", "/demo/care-path", "/demo/housekeeping-path"],
+        "acl_note": "housekeeping-path 末尾含离岗 ACL 回执（employer_feed_access=denied）",
     }
 
 
@@ -303,14 +304,34 @@ def demo_housekeeping_path():
     )
     rec = json.loads(execute_tool("recommend_service_workers", {"demand_id": demand["id"], "limit": 3}))
     pack = json.loads(execute_tool("get_cert_study_pack", {"role": "育婴"}))
+    emp = json.loads(
+        execute_tool(
+            "start_care_employment",
+            {"profile_id": profile["id"], "caregiver_name": "小周"},
+        )
+    )
+    for kind, content in (
+        ("weaning", "看辅食 · 眼镜第一视角"),
+        ("grocery", "记买菜"),
+        ("care", "记带娃瞬间"),
+    ):
+        execute_tool(
+            "post_on_duty_moment",
+            {"employment_id": emp["id"], "kind": kind, "content": content},
+        )
+    ended = json.loads(execute_tool("end_care_shift", {"employment_id": emp["id"]}))
+    closed = json.loads(execute_tool("list_on_duty_moments", {"employment_id": emp["id"]}))
     return {
-        "story": "家政面试评测 → 挂牌 → 需求 → 推荐 → 考证资料",
+        "story": "测→晒→配→看→关：面试 · 挂牌 · ≥3条解释 · 眼镜三捷径 · 离岗 ACL",
         "trajectory": [
             {"name": "fair_interview_score", "result": score},
             {"name": "publish_service_profile", "result": profile},
             {"name": "publish_service_demand", "result": demand},
             {"name": "recommend_service_workers", "result": rec},
             {"name": "get_cert_study_pack", "result": pack},
+            {"name": "start_care_employment", "result": emp},
+            {"name": "end_care_shift", "result": ended},
+            {"name": "list_on_duty_moments", "result": closed},
         ],
     }
 

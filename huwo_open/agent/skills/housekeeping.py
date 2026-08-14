@@ -117,6 +117,7 @@ def publish_service_demand(
 
 
 def recommend_service_workers(demand_id: int | None = None, limit: int = 3) -> dict[str, Any]:
+    demand = next((d for d in _demands if d["id"] == demand_id), None) if demand_id else None
     items = sorted(_profiles, key=lambda x: float(x.get("score_overall") or 0), reverse=True)
     if not items:
         items = [
@@ -125,15 +126,156 @@ def recommend_service_workers(demand_id: int | None = None, limit: int = 3) -> d
                 "display_name": "示例育婴嫂·小周",
                 "roles": "育婴嫂",
                 "city": "杭州",
+                "years_exp": 5,
                 "score_overall": 8.6,
                 "note": "无挂牌时返回示例，便于评委复现推荐轨迹",
             }
         ]
+    recs = []
+    for p in items[: max(1, min(limit, 5))]:
+        recs.append({**p, **_with_match_reasons(p, demand)})
     return {
         "demand_id": demand_id,
-        "recommendations": items[: max(1, min(limit, 5))],
-        "fairness_note": "按评测分与岗位匹配排序，不引入地域歧视权重。",
+        "recommendations": recs,
+        "fairness_note": "按评测分与岗位匹配排序，不引入地域歧视权重。每条至少 3 条解释。",
     }
+
+
+def _with_match_reasons(p: dict[str, Any], demand: dict[str, Any] | None) -> dict[str, Any]:
+    reasons: list[str] = []
+    roles = str(p.get("roles") or "")
+    need = str((demand or {}).get("service_types") or "")
+    if need and need in roles:
+        reasons.append(f"岗位匹配：{need}")
+    elif roles:
+        reasons.append(f"岗位：{roles}")
+    if p.get("city"):
+        reasons.append(f"可服务 {p['city']}")
+    if p.get("years_exp"):
+        reasons.append(f"从业 {p['years_exp']} 年")
+    reasons.append(f"国标测评示意 {p.get('score_overall') or 8} 分")
+    reasons.append("平台信用档案可核验")
+    out: list[str] = []
+    for r in reasons:
+        if r and r not in out:
+            out.append(r)
+        if len(out) >= 3:
+            break
+    while len(out) < 3:
+        out.append("平台信用档案可核验")
+    return {"match_reasons": out[:5], "match_reason": "；".join(out[:5])}
+
+
+_eid = itertools.count(3001)
+_mid = itertools.count(4001)
+_employments: list[dict[str, Any]] = []
+_moments: list[dict[str, Any]] = []
+
+
+def start_care_employment(
+    *,
+    profile_id: int | None = None,
+    caregiver_name: str = "",
+    note: str = "",
+) -> dict[str, Any]:
+    emp = {
+        "id": next(_eid),
+        "profile_id": profile_id,
+        "caregiver_name": caregiver_name or "育婴师",
+        "status": "active",
+        "note": note,
+        "acl_revoked": False,
+    }
+    _employments.append(emp)
+    return emp
+
+
+def post_on_duty_moment(
+    *,
+    employment_id: int | None = None,
+    content: str = "",
+    kind: str = "care",
+    media_url: str = "",
+) -> dict[str, Any]:
+    emp = _active_emp(employment_id)
+    if not emp:
+        return {"ok": False, "error": "仅在岗配对可写入时间线"}
+    row = {
+        "id": next(_mid),
+        "employment_id": emp["id"],
+        "content": content or "眼镜第一视角事件",
+        "kind": kind,
+        "media_url": media_url,
+        "source": "glasses_demo",
+    }
+    _moments.append(row)
+    return {"ok": True, "moment": row}
+
+
+def end_care_shift(employment_id: int | None = None) -> dict[str, Any]:
+    emp = _active_emp(employment_id)
+    if not emp:
+        ended = next((e for e in reversed(_employments) if e.get("status") == "ended"), None)
+        if ended:
+            return ended
+        return {"ok": False, "error": "当前没有在岗配对"}
+    frames = [m for m in _moments if m["employment_id"] == emp["id"]]
+    n = len(frames)
+    kinds = {}
+    for m in frames:
+        kinds[m.get("kind") or "moment"] = kinds.get(m.get("kind") or "moment", 0) + 1
+    score = round(min(10.0, 6.4 + n * 0.4), 1)
+    emp["status"] = "ended"
+    emp["acl_revoked"] = True
+    emp["shift_review"] = {
+        "score": score,
+        "event_count": n,
+        "event_types": kinds,
+        "dimensions": [
+            {"name": "安全看护", "score": score},
+            {"name": "辅食与营养", "score": round(min(10.0, 6.2 + (1.6 if kinds.get("weaning") else 0)), 1)},
+            {"name": "互动记录", "score": round(min(10.0, 6.3 + n * 0.3), 1)},
+            {"name": "响应完整度", "score": round(min(10.0, 6.5 + n * 0.2), 1)},
+        ],
+        "summary": f"本班次 {n} 条第一视角事件，综合 {score} 分。离岗后雇主不可再访问本岗影像。",
+    }
+    emp["acl_receipt"] = {
+        "receipt_id": f"ACL-{emp['id']}-demo",
+        "acl_revoked": True,
+        "employer_feed_access": "denied",
+        "message": "离岗后雇主不可再访问本岗影像时间线（Demo 回执）。",
+    }
+    emp["ok"] = True
+    emp["message"] = "已离岗：雇主影像权限已关闭"
+    return emp
+
+
+def list_on_duty_moments(employment_id: int | None = None) -> dict[str, Any]:
+    emp = None
+    if employment_id:
+        emp = next((e for e in _employments if e["id"] == employment_id), None)
+    else:
+        emp = next((e for e in reversed(_employments) if e.get("status") == "active"), None)
+    if not emp:
+        return {"items": [], "acl_active": False}
+    if emp.get("status") != "active":
+        return {
+            "items": [],
+            "acl_active": False,
+            "acl_receipt": emp.get("acl_receipt"),
+            "error": "acl_revoked",
+        }
+    items = [m for m in _moments if m["employment_id"] == emp["id"]]
+    return {"items": items, "acl_active": True}
+
+
+def _active_emp(employment_id: int | None) -> dict[str, Any] | None:
+    if employment_id:
+        emp = next((e for e in _employments if e["id"] == employment_id), None)
+        if emp and emp.get("status") == "active":
+            return emp
+        return None
+    return next((e for e in reversed(_employments) if e.get("status") == "active"), None)
 
 
 def get_cert_study_pack(role: str = "") -> dict[str, Any]:

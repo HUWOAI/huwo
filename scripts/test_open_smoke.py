@@ -33,7 +33,14 @@ def main() -> None:
 
     h = _housekeeping()
     assert h["trajectory"][0]["result"].get("score_overall") is not None
-    assert h["trajectory"][3]["result"].get("recommendations")
+    recs = h["trajectory"][3]["result"].get("recommendations") or []
+    assert recs
+    assert len(recs[0].get("match_reasons") or []) >= 3
+    ended = next(t["result"] for t in h["trajectory"] if t["name"] == "end_care_shift")
+    assert ended.get("acl_revoked") is True
+    assert ended.get("acl_receipt", {}).get("employer_feed_access") == "denied"
+    closed = next(t["result"] for t in h["trajectory"] if t["name"] == "list_on_duty_moments")
+    assert closed.get("items") == []
 
     schema = json.loads((ROOT / "huwo_open" / "agent" / "tools_schema.json").read_text(encoding="utf-8"))
     tool_names = {t["function"]["name"] for t in schema}
@@ -42,6 +49,9 @@ def main() -> None:
         "create_med_reminder",
         "fair_interview_score",
         "publish_service_profile",
+        "start_care_employment",
+        "end_care_shift",
+        "post_on_duty_moment",
     ):
         assert required in tool_names, required
 

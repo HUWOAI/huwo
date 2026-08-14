@@ -29,7 +29,7 @@ python scripts/run_demo.py housekeeping
 |------|------|
 | `golden` | 清淡晚餐约束 → 清单 → 买菜深链示意 → 附近 → 小虎 `robot_notify` |
 | `care` | 吃药提醒创建/列表示意（任务助手边界，非审方） |
-| `housekeeping` | 公平面试示意 → 挂牌 → 推荐 |
+| `housekeeping` | 公平面试 → 挂牌 → ≥3 条匹配解释 → 眼镜三捷径 → 离岗 ACL |
 
 启动 Web Demo：
 

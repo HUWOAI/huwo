@@ -8,11 +8,15 @@ from typing import Any
 
 from huwo_open.agent.skills.food_intel import check_food_suitability, get_food_profile, lookup_food
 from huwo_open.agent.skills.housekeeping import (
+    end_care_shift,
     fair_interview_score,
     get_cert_study_pack,
+    list_on_duty_moments,
+    post_on_duty_moment,
     publish_service_demand,
     publish_service_profile,
     recommend_service_workers,
+    start_care_employment,
 )
 from huwo_open.agent.skills.meal_plan import build_meal_plan, build_shopping_list
 from huwo_open.agent.skills.med_reminder import create_med_reminder, list_med_reminders
@@ -150,6 +154,29 @@ def execute_tool(name: str, args: dict[str, Any]) -> str:
         )
     if name == "get_cert_study_pack":
         return json.dumps(get_cert_study_pack(str(args.get("role") or "")), ensure_ascii=False)
+    if name == "start_care_employment":
+        return json.dumps(
+            start_care_employment(
+                profile_id=args.get("profile_id"),
+                caregiver_name=str(args.get("caregiver_name") or ""),
+                note=str(args.get("note") or ""),
+            ),
+            ensure_ascii=False,
+        )
+    if name == "post_on_duty_moment":
+        return json.dumps(
+            post_on_duty_moment(
+                employment_id=args.get("employment_id"),
+                content=str(args.get("content") or ""),
+                kind=str(args.get("kind") or "care"),
+                media_url=str(args.get("media_url") or ""),
+            ),
+            ensure_ascii=False,
+        )
+    if name == "end_care_shift":
+        return json.dumps(end_care_shift(args.get("employment_id")), ensure_ascii=False)
+    if name == "list_on_duty_moments":
+        return json.dumps(list_on_duty_moments(args.get("employment_id")), ensure_ascii=False)
     return json.dumps({"error": f"unknown tool {name}"}, ensure_ascii=False)
 
 
@@ -157,14 +184,60 @@ def get_robot_adapter() -> RobotAdapter:
     return _robot
 
 
+def _rule_based_reply(user_message: str) -> dict[str, Any]:
+    """无 LLM Key 时的规则降级：按关键词直接路由到工具，保证 Demo 可演示。"""
+    text = user_message or ""
+    trajectory: list[dict[str, Any]] = []
+    parts: list[str] = ["（未配置 LLM Key，走规则引擎演示）"]
+
+    def _run(name: str, args: dict[str, Any]) -> Any:
+        result = execute_tool(name, args)
+        try:
+            obj: Any = json.loads(result)
+        except Exception:
+            obj = result
+        trajectory.append({"name": name, "arguments": args, "result": obj})
+        return obj
+
+    if any(k in text for k in ("晚餐", "三餐", "吃什么", "饭", "meal")):
+        goal = "清淡" if "清淡" in text else None
+        plan = _run("generate_meal_plan", {"goal": goal} if goal else {})
+        dinner = plan.get("dinner") or ""
+        parts.append(f"今晚推荐：{dinner}。" if dinner else "已生成三餐方案。")
+        shop = _run("get_shopping_list", {})
+        items = shop.get("items") or []
+        if items:
+            parts.append("采购清单：" + "、".join(str(i.get("name")) for i in items[:6]) + "。")
+    elif any(k in text for k in ("吃药", "药", "提醒", "medication")):
+        _run("list_med_reminders", {})
+        parts.append("已查询吃药提醒（任务助手，不构成医疗建议）。")
+    elif any(k in text for k in ("离岗", "结束工作", "ACL")):
+        _run("end_care_shift", {})
+        parts.append("已离岗并关闭雇主影像权限。")
+    elif any(k in text for k in ("家政", "保姆", "育婴", "月嫂", "护工")):
+        _run("recommend_service_workers", {"limit": 3})
+        parts.append("已为您匹配家政候选人（AI 公平初筛，复核权在人）。")
+    elif any(k in text for k in ("附近", "餐厅", "超市", "nearby")):
+        _run("search_nearby", {"poi_type": "restaurant"})
+        parts.append("已查询附近推荐。")
+    else:
+        _run("generate_meal_plan", {})
+        parts.append("已生成今日三餐参考方案；配置 LLM Key 后可自由对话。")
+    return {"reply": "".join(parts), "trajectory": trajectory}
+
+
 async def chat_once(user_message: str, history: list[dict] | None = None) -> dict[str, Any]:
-    """Single-turn chat with tool calling (requires LLM API key).
+    """Single-turn chat with tool calling.
 
     Returns ``{"reply": str, "trajectory": [{"name","arguments","result"}, ...]}``.
+    未配置 LLM Key 时自动降级为规则路径（演示可用，评测文档承诺的无 Key 路径）。
     """
-    from huwo_open.providers import create_llm_client
+    try:
+        from huwo_open.providers import create_llm_client
 
-    client, model = create_llm_client()
+        client, model = create_llm_client()
+    except (RuntimeError, ImportError):
+        return _rule_based_reply(user_message)
     pref = default_preferences()
     system = load_system_prompt() + f"\n用户上下文：{json.dumps(pref, ensure_ascii=False)}"
     messages: list[dict] = [{"role": "system", "content": system}]
