@@ -168,11 +168,11 @@
     "type": "function",
     "function": {
       "name": "fair_interview_score",
-      "description": "家政 AI 公平面试示意评分（规则透明，降低人为偏见）",
+      "description": "国标六维公平评测示意（安全意识/日常护理/喂养辅食/症状观察/发展引导/沟通操守）；规则透明，非人社官方鉴定",
       "parameters": {
         "type": "object",
         "properties": {
-          "roles": { "type": "string" },
+          "roles": { "type": "string", "description": "岗位，如育婴师" },
           "years_exp": { "type": "number" },
           "certificates": { "type": "string" },
           "answer_quality": { "type": "number", "description": "0-10 沟通/答题质量" }

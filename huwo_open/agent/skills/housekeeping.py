@@ -76,10 +76,13 @@ def publish_service_profile(
     certificates: str = "",
     score_overall: float | None = None,
 ) -> dict[str, Any]:
-    if score_overall is None:
-        score_overall = fair_interview_score(
-            roles=roles, years_exp=years_exp, certificates=certificates
-        )["score_overall"]
+    report = fair_interview_score(
+        roles=roles, years_exp=years_exp, certificates=certificates
+    )
+    if score_overall is not None:
+        report = {**report, "score_overall": float(score_overall)}
+    else:
+        score_overall = report["score_overall"]
     row = {
         "id": next(_pid),
         "display_name": display_name,
@@ -89,9 +92,7 @@ def publish_service_profile(
         "certificates": certificates,
         "resume_text": resume_text,
         "score_overall": score_overall,
-        "report_json": fair_interview_score(
-            roles=roles, years_exp=years_exp, certificates=certificates
-        ),
+        "report_json": report,
         "status": "demo_published",
         "note": "开源 Demo 内存挂牌；商业版写入服务市场并脱敏展示联系方式。闭环：测→晒→配→看→关",
     }
@@ -158,9 +159,16 @@ def _with_match_reasons(p: dict[str, Any], demand: dict[str, Any] | None) -> dic
     if p.get("city"):
         reasons.append(f"可服务 {p['city']}")
     if p.get("years_exp"):
-        reasons.append(f"从业 {p['years_exp']} 年")
-    reasons.append(f"国标测评示意 {p.get('score_overall') or 8} 分")
-    reasons.append("平台信用档案可核验")
+        reasons.append(f"从业 {p['years_exp']} 年 · 月龄经验可对齐")
+    score = p.get("score_overall")
+    if score is not None:
+        reasons.append(f"国标六维示意 {score} 分 · 档位可解释")
+    dims = (p.get("report_json") or {}).get("dimensions") if isinstance(p.get("report_json"), dict) else None
+    if isinstance(dims, list) and dims:
+        top = max(dims, key=lambda d: float((d or {}).get("score") or 0))
+        if top.get("label"):
+            reasons.append(f"优势维度：{top['label']}")
+    reasons.append("平台信用档案可核验 · 事件制在岗可追溯")
     out: list[str] = []
     for r in reasons:
         if r and r not in out:
@@ -168,7 +176,16 @@ def _with_match_reasons(p: dict[str, Any], demand: dict[str, Any] | None) -> dic
         if len(out) >= 3:
             break
     while len(out) < 3:
-        out.append("平台信用档案可核验")
+        fillers = [
+            "国标档位可解释",
+            "住家/城市可对齐",
+            "平台信用档案可核验",
+        ]
+        f = fillers[len(out) % len(fillers)]
+        if f not in out:
+            out.append(f)
+        else:
+            out.append(f"匹配因子 {len(out) + 1}")
     return {"match_reasons": out[:5], "match_reason": "；".join(out[:5])}
 
 

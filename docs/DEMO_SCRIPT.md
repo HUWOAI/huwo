@@ -37,11 +37,13 @@ python scripts/run_demo.py housekeeping
 
 口述要点：
 
-1. **测**：`fair_interview_score` 规则透明评分  
-2. **晒**：`publish_service_profile` 挂牌  
-3. **配**：`recommend_service_workers` 每条 **≥3 条** `match_reasons`  
-4. **看**：`post_on_duty_moment` 看辅食 / 记买菜 / 带娃瞬间  
-5. **关**：`end_care_shift` → `acl_receipt.employer_feed_access = denied`；再 `list_on_duty_moments` 为空  
+1. **测**：`fair_interview_score` → **国标六维**（安全/护理/喂养/症状/引导/操守）规则透明评分  
+2. **晒**：`publish_service_profile` 影像/简历挂牌（Demo 内存）  
+3. **配**：`recommend_service_workers` 每条 **≥3** `match_reasons`  
+4. **看**：眼镜三捷径事件帧 `post_on_duty_moment`（事件制，非 24h）  
+5. **关**：`end_care_shift` → `employer_feed_access=denied`；再查时间线为空  
+
+线上对照：https://www.huwo.xyz/AIEAT/ · 设置开「评委模式」看工具轨迹。
 
 可选加一句：`python scripts/run_demo.py care`（吃药提醒，任务助手边界）。
 

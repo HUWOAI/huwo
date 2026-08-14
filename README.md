@@ -4,16 +4,18 @@
 [![GitHub](https://img.shields.io/badge/GitHub-HUWOAI%2Fhuwo-181717?logo=github)](https://github.com/HUWOAI/huwo)
 [![English](https://img.shields.io/badge/README-English-blue)](./README.en.md)
 
-> **呼我人工智能 · 家庭超级智能体** — Agent 内核开源模块  
+> **呼我人工智能 · 第一视角家政可信直聘 Agent**  
 > 口号：**您有所呼，我有所应**  
 > 团队：**衢州呼我网络科技有限公司**（EN: Quzhou HUWO Network Technology Co., Ltd.）  
 > 呼我杭州研发中心：**杭州汇融科技有限公司**  
 > 线上产品：https://www.huwo.xyz/AIEAT/  
-> 赛题对齐：GOAI 无界应用 · **AI+眼镜** · 家政可信直聘 Agent
+> 赛题对齐：GOAI 无界应用 · **AI+眼镜** · 测有国标 · 晒有实景 · 配有理由 · 看有证据 · 关有闭环
 
 **English:** [README.en.md](./README.en.md)
 
-本仓库提供**可运行、可演示、可复制**的黄金路径 Demo：饮食决策、健康关怀、以及 **测 → 晒 → 配 → 看 → 关** 家政直聘闭环（含 ≥3 条匹配解释、眼镜在岗事件帧、离岗 ACL）。
+找靠谱育婴师是刚需，缺的是**可验证信任**。本仓库提供**可运行、可演示、可复制**的 Agent 内核 Demo：饮食决策、健康关怀，以及家政 **测 → 晒 → 配 → 看 → 关** 闭环（国标六维、≥3 条匹配解释、眼镜在岗事件帧、离岗 ACL）。
+
+**评委速查：** [docs/GOAI_JUDGE.md](./docs/GOAI_JUDGE.md) · **作品简介稿：** [docs/GOAI_SUBMIT_BLURB.md](./docs/GOAI_SUBMIT_BLURB.md)
 
 ---
 

@@ -32,7 +32,11 @@ def main() -> None:
     assert "disclaimer" in c["trajectory"][0]["result"]
 
     h = _housekeeping()
-    assert h["trajectory"][0]["result"].get("score_overall") is not None
+    score = h["trajectory"][0]["result"]
+    assert score.get("score_overall") is not None
+    dims = score.get("dimensions") or []
+    assert len(dims) >= 6, dims
+    assert {d.get("key") for d in dims} >= {"safety", "care", "feed", "symptom", "guide", "ethic"}
     recs = h["trajectory"][3]["result"].get("recommendations") or []
     assert recs
     assert len(recs[0].get("match_reasons") or []) >= 3
@@ -41,6 +45,7 @@ def main() -> None:
     assert ended.get("acl_receipt", {}).get("employer_feed_access") == "denied"
     closed = next(t["result"] for t in h["trajectory"] if t["name"] == "list_on_duty_moments")
     assert closed.get("items") == []
+    assert closed.get("acl_active") is False
 
     schema = json.loads((ROOT / "huwo_open" / "agent" / "tools_schema.json").read_text(encoding="utf-8"))
     tool_names = {t["function"]["name"] for t in schema}
