@@ -37,29 +37,32 @@ _CERT_PACKS: dict[str, dict[str, Any]] = {
 
 def fair_interview_score(
     *,
-    roles: str = "保姆",
+    roles: str = "育婴师",
     years_exp: float = 0,
     certificates: str = "",
     answer_quality: float = 7.0,
 ) -> dict[str, Any]:
-    """AI 公平面试示意分：规则透明、可复现，降低人为偏见叙事。"""
-    base = 5.0
-    base += min(3.0, float(years_exp) * 0.3)
-    if certificates.strip():
-        base += 1.0
-    base += max(0.0, min(2.0, (float(answer_quality) - 5.0) * 0.4))
-    score = round(min(10.0, base), 1)
+    """国标六维示意分：规则透明、可复现（Demo，非真实鉴定）。"""
+    aq = max(0.0, min(10.0, float(answer_quality)))
+    ye = max(0.0, float(years_exp))
+    cert_boost = 1.0 if certificates.strip() else 0.0
+    dims = [
+        {"key": "safety", "label": "安全意识", "score": round(min(10.0, 5.5 + aq * 0.35 + cert_boost * 0.3), 1)},
+        {"key": "care", "label": "日常护理", "score": round(min(10.0, 5.2 + ye * 0.25 + aq * 0.25), 1)},
+        {"key": "feed", "label": "喂养辅食", "score": round(min(10.0, 5.0 + ye * 0.2 + aq * 0.3), 1)},
+        {"key": "symptom", "label": "症状观察", "score": round(min(10.0, 5.0 + aq * 0.4), 1)},
+        {"key": "guide", "label": "发展引导", "score": round(min(10.0, 4.8 + ye * 0.15 + aq * 0.35), 1)},
+        {"key": "ethic", "label": "沟通操守", "score": round(min(10.0, 5.5 + cert_boost + aq * 0.2), 1)},
+    ]
+    score = round(sum(d["score"] for d in dims) / len(dims), 1)
     return {
         "roles": roles,
         "score_overall": score,
-        "dimensions": {
-            "experience": round(min(10.0, 4 + float(years_exp) * 0.5), 1),
-            "certificates": 8.0 if certificates.strip() else 5.0,
-            "communication": round(min(10.0, float(answer_quality)), 1),
-            "fairness_note": "规则评分，不因籍贯/外貌加权",
-        },
-        "disclaimer": "Demo 评测仅供参考，不构成劳动/背景调查结论；正式背调与签约在商业版完成。",
+        "dimensions": dims,
+        "incomplete": False,
+        "disclaimer": "Demo 评测仅供参考，不构成人社官方职业鉴定；正式背调与签约在商业版完成。",
         "insurance_hint": "本单建议投保（占位）— 商业版可引导服务过程保险，不输出承保结论。",
+        "fairness_note": "规则评分，不因籍贯/外貌加权",
     }
 
 
@@ -86,8 +89,11 @@ def publish_service_profile(
         "certificates": certificates,
         "resume_text": resume_text,
         "score_overall": score_overall,
+        "report_json": fair_interview_score(
+            roles=roles, years_exp=years_exp, certificates=certificates
+        ),
         "status": "demo_published",
-        "note": "开源 Demo 内存挂牌；商业版写入服务市场并脱敏展示联系方式。",
+        "note": "开源 Demo 内存挂牌；商业版写入服务市场并脱敏展示联系方式。闭环：测→晒→配→看→关",
     }
     _profiles.append(row)
     return row
