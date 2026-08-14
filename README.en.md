@@ -6,7 +6,8 @@
 
 > **HUWO AI · Family Super-Agent** — open-source Agent kernel  
 > Tagline: **You call — we answer** (您有所呼，我有所应)  
-> Team: **Callme Group LLC / 呼我网络科技**  
+> Team: **Quzhou HUWO Network Technology Co., Ltd.**（衢州呼我网络科技有限公司）  
+> Hangzhou R&D center: **Hangzhou Huirong Technology Co., Ltd.**（杭州汇融科技有限公司）  
 > Live product: https://www.huwo.xyz/AIEAT/  
 > Contest track: GOAI Boundless Agents · **AI + Smart Glasses** · Trusted home-care hiring Agent
 
@@ -76,7 +77,8 @@ python -m uvicorn demo.app:app --host 127.0.0.1 --port 8765
 |------|--------|
 | H5 | https://www.huwo.xyz/AIEAT/ |
 | Website | https://www.huwo.xyz/ |
-| Test account | `13800000001` / `Ok778899` (invite code `100001`) |
+| Login | **SMS code** or **phone + password**; **invite code optional** on signup |
+| Test account | `13800000001` / password `Ok778899` (optional invite `100001`) |
 | Voice call persona | **HUWO AI Assistant** (assess / hire / tasks) |
 | Glasses | Shortcuts: weaning check / grocery note / care moment → on-duty timeline; **End shift** → ACL receipt |
 | Judge mode | Settings → Judge mode ON → always-expanded Agent traces on home |

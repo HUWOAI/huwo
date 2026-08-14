@@ -56,7 +56,8 @@ def health():
 def root():
     return {
         "project": "呼我 HUWO · Open Demo (MIT)",
-        "team": "呼我网络科技 / Callme Group LLC",
+        "team": "衢州呼我网络科技有限公司 / Quzhou HUWO Network Technology Co., Ltd.",
+        "hangzhou_rd": "呼我杭州研发中心 · 杭州汇融科技有限公司",
         "docs": "/docs",
         "live_product": "https://www.huwo.xyz/AIEAT/",
         "note": "商业版 APP 后端、账号/社交、生产数据不在本仓库",

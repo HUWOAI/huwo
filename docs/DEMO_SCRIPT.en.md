@@ -1,6 +1,8 @@
 # 3-Minute Demo Script (Open Kernel)
 
-> Team: **Callme Group LLC / HUWO**  
+> Team: **Quzhou HUWO Network Technology Co., Ltd.**  
+> Hangzhou R&D: **Hangzhou Huirong Technology Co., Ltd.**（杭州汇融科技有限公司）  
+> Login: SMS or phone+password; invite code optional  
 > Product: HUWO AI · Family Super-Agent  
 > Track: GOAI **AI + Smart Glasses** · trusted home-care hiring Agent  
 > 中文: [DEMO_SCRIPT.md](./DEMO_SCRIPT.md)

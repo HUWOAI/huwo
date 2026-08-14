@@ -24,7 +24,8 @@ Volcano Engine (Ark LLM, speech/RTC, etc.), MiniMax, and Python packages listed 
 
 We keep iterating skills, smoke tests, and docs in this single MIT repo. We do not invent fake multi-repo splits. Firmware and commercial backends remain closed.
 
-**IP** belongs to **Callme Group LLC / 呼我网络科技**.  
+**IP** belongs to **Quzhou HUWO Network Technology Co., Ltd.**（衢州呼我网络科技有限公司）.  
+Hangzhou R&D center: **Hangzhou Huirong Technology Co., Ltd.**（杭州汇融科技有限公司）.  
 Site: www.huwo.xyz · Open-source contact via GitHub Issues.
 
 ---
